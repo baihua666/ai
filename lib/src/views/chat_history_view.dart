@@ -62,7 +62,8 @@ class _ChatHistoryViewState extends State<ChatHistoryView> {
               text: viewModel.welcomeMessage,
               attachments: [],
             ),
-          ...viewModel.provider.history,
+          // ...viewModel.provider.history,
+          ...viewModel.provider.history.where((message) => message.origin.isSystem == false),
         ];
 
         return ListView.builder(

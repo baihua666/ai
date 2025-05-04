@@ -7,6 +7,8 @@ enum MessageOrigin {
   /// Indicates that the message originated from the user.
   user,
 
+  system,
+
   /// Indicates that the message originated from the LLM.
   llm;
 
@@ -15,4 +17,6 @@ enum MessageOrigin {
 
   /// Checks if the message origin is from the LLM.
   bool get isLlm => this == MessageOrigin.llm;
+
+  bool get isSystem => this == MessageOrigin.system;
 }

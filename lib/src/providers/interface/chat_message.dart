@@ -27,7 +27,7 @@ class ChatMessage {
     required this.origin,
     required this.text,
     required this.attachments,
-  }) : assert(origin.isUser && text != null && text.isNotEmpty || origin.isLlm);
+  }) : assert(origin.isUser && text != null && text.isNotEmpty || origin.isLlm || origin.isSystem);
 
   /// Converts a JSON map representation to a [ChatMessage].
   ///

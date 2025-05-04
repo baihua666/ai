@@ -54,7 +54,7 @@ class _AttachmentActionBarState extends State<AttachmentActionBar> {
         ),
         consumeOutsideTap: true,
         builder:
-            (_, controller, _) => ActionButton(
+            (_, controller, widget) => ActionButton(
               onPressed: controller.isOpen ? controller.close : controller.open,
               style: chatStyle.addButtonStyle!,
             ),
