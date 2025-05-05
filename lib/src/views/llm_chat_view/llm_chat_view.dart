@@ -89,6 +89,7 @@ class LlmChatView extends StatefulWidget {
     this.errorMessage = 'ERROR',
     this.enableAttachments = true,
     this.enableVoiceNotes = true,
+    this.onTranslateStt,
     super.key,
   }) : viewModel = ChatViewModel(
          provider: provider,
@@ -112,6 +113,9 @@ class LlmChatView extends StatefulWidget {
   /// When set to false, the voice recording button and related functionality
   /// will be disabled.
   final bool enableVoiceNotes;
+
+  final Future<String?> Function(XFile file)? onTranslateStt;
+
 
   /// The view model containing the chat state and configuration.
   ///
@@ -282,6 +286,15 @@ class _LlmChatViewState extends State<LlmChatView>
     _initialMessage = null;
     _associatedResponse = null;
 
+    if (widget.onTranslateStt != null) {
+      _pendingSttResponse = LlmResponse(stream: Stream.fromFuture(Future.value('')), onUpdate: (String text) {  }, onDone: (LlmException? error) {  });
+      
+      var response = await widget.onTranslateStt!.call(file);
+      _onSttDone(null, response ?? '', file);
+      setState(() {});
+      return;
+    }
+
     // use the LLM to translate the attached audio to text
     const prompt =
         'translate the attached audio to text; provide the result of that '
@@ -310,7 +323,9 @@ class _LlmChatViewState extends State<LlmChatView>
   ) async {
     assert(_pendingSttResponse != null);
     setState(() {
-      _initialMessage = ChatMessage.user(response, []);
+      if (response.isNotEmpty) {
+        _initialMessage = ChatMessage.user(response, []);
+      }
       _pendingSttResponse = null;
     });
 

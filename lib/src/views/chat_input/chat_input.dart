@@ -109,7 +109,19 @@ class _ChatInputState extends State<ChatInput> {
   final _focusNode = FocusNode();
 
   final _textController = TextEditingController();
-  final _waveController = WaveformRecorderController();
+  // final _waveController = WaveformRecorderController();
+  // 从WaveformRecorderController拷贝出来，定制文件格式
+  final _waveController = WaveformRecorderController(config: RecordConfig(
+    encoder: AudioEncoder.wav,
+    numChannels: 1,
+    bitRate: 128000,
+    sampleRate: 44100,
+    autoGain: false,
+    echoCancel: false,
+    noiseSuppress: false,
+    androidConfig: const AndroidRecordConfig(),
+    iosConfig: const IosRecordConfig(),
+  ));
   final _attachments = <Attachment>[];
 
   ChatViewModel? _viewModel;
