@@ -31,6 +31,7 @@ class ChatViewModel {
     required this.suggestions,
     required this.welcomeMessage,
     required this.responseBuilder,
+    required this.userMessageBuilder,
     required this.messageSender,
     required this.enableAttachments,
     required this.enableVoiceNotes,
@@ -67,6 +68,9 @@ class ChatViewModel {
   /// in the interface, enabling tailored presentation of messages.
   final ResponseBuilder? responseBuilder;
 
+  // custom
+  final ResponseBuilder? userMessageBuilder;
+
   /// The message sender for the chat interface.
   ///
   /// This optional generator is used to send messages to the LLM, allowing for
@@ -96,6 +100,7 @@ class ChatViewModel {
           other.suggestions == suggestions &&
           other.welcomeMessage == welcomeMessage &&
           other.responseBuilder == responseBuilder &&
+          other.userMessageBuilder == userMessageBuilder &&
           other.messageSender == messageSender &&
           other.enableAttachments == enableAttachments &&
           other.enableVoiceNotes == enableVoiceNotes);
@@ -108,6 +113,7 @@ class ChatViewModel {
     suggestions,
     welcomeMessage,
     responseBuilder,
+    userMessageBuilder,
     messageSender,
     enableAttachments,
     enableVoiceNotes,

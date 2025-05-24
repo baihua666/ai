@@ -3,9 +3,28 @@
 // found in the LICENSE file.
 
 import 'package:flutter/widgets.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 
 import 'toolkit_colors.dart';
+
+// 解决google_fonts运行加载在线字体报错的问题
+class GoogleFonts {
+  static TextStyle roboto({Color? color, double? fontSize, FontWeight? fontWeight}) {
+    return TextStyle(
+      color: color,
+      fontSize: fontSize,
+      fontWeight: fontWeight
+    );
+  }
+
+  static TextStyle robotoMono({Color? color, double? fontSize, FontWeight? fontWeight}) {
+    return TextStyle(
+        color: color,
+        fontSize: fontSize,
+        fontWeight: fontWeight
+    );
+  }
+}
 
 /// A utility class that defines text styles for the Fat design system.
 @immutable

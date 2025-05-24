@@ -80,6 +80,7 @@ class LlmChatView extends StatefulWidget {
     required LlmProvider provider,
     LlmChatViewStyle? style,
     ResponseBuilder? responseBuilder,
+    ResponseBuilder? userMessageBuilder,
     LlmStreamGenerator? messageSender,
     List<String> suggestions = const [],
     String? welcomeMessage,
@@ -94,6 +95,7 @@ class LlmChatView extends StatefulWidget {
   }) : viewModel = ChatViewModel(
          provider: provider,
          responseBuilder: responseBuilder,
+         userMessageBuilder: userMessageBuilder,
          messageSender: messageSender,
          style: style,
          suggestions: suggestions,

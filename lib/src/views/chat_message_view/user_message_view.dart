@@ -78,7 +78,13 @@ class UserMessageView extends StatelessWidget {
                       chatStyle: chatStyle,
                       clipboardText: text,
                       onEdit: onEdit,
-                      child: Text(text, style: userStyle.textStyle),
+                      child:
+                      // Text(text, style: userStyle.textStyle),
+                      //custom
+                      viewModel.userMessageBuilder == null ?
+                      Text(text, style: userStyle.textStyle) :
+                          viewModel.userMessageBuilder!(context, text),
+
                     ),
                   ),
                 ),
