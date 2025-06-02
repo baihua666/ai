@@ -19,6 +19,17 @@ import 'input_button.dart';
 import 'input_state.dart';
 import 'text_or_audio_input.dart';
 
+typedef ChatInputBuilder = Widget Function(
+    BuildContext context,
+    void Function(String, Iterable<Attachment>) onSendMessage,
+    Future<String?> Function(XFile file) onTranslateStt,
+    ChatMessage? initialMessage,
+    void Function()? onCancelEdit,
+    void Function()? onCancelMessage,
+    void Function()? onCancelStt,
+    bool autofocus
+    );
+
 /// A widget that provides a chat input interface with support for text input,
 /// speech-to-text, and attachments.
 @immutable
@@ -58,7 +69,7 @@ class ChatInput extends StatefulWidget {
   /// Callback function triggered when speech-to-text translation is requested.
   ///
   /// Takes an [XFile] representing the audio file to be translated.
-  final void Function(XFile file) onTranslateStt;
+  final Future<void> Function(XFile file) onTranslateStt;
 
   /// The initial message to populate the input field, if any.
   final ChatMessage? initialMessage;

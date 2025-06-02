@@ -22,4 +22,14 @@ export 'src/views/llm_chat_view/llm_chat_view.dart';
 
 // custom
 export 'src/views/llm_chat_view/llm_response.dart';
+// custom input
+export 'src/chat_view_model/chat_view_model.dart';
+export 'src/chat_view_model/chat_view_model_provider.dart';
+export 'src/views/chat_input/attachments_view.dart';
+export 'src/views/chat_input/text_or_audio_input.dart';
+export 'src/views/chat_input/attachments_action_bar.dart';
+export 'src/views/chat_input/input_button.dart';
+export 'src/views/chat_input/input_state.dart';
+export 'src/dialogs/adaptive_snack_bar/adaptive_snack_bar.dart';
+
 

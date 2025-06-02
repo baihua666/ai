@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 
 import '../providers/interface/llm_provider.dart';
 import '../styles/llm_chat_view_style.dart';
+import '../views/chat_input/chat_input.dart';
 import '../views/response_builder.dart';
 
 @immutable
@@ -32,6 +33,7 @@ class ChatViewModel {
     required this.welcomeMessage,
     required this.responseBuilder,
     required this.userMessageBuilder,
+    this.chatInputBuilder,
     required this.messageSender,
     required this.enableAttachments,
     required this.enableVoiceNotes,
@@ -70,6 +72,9 @@ class ChatViewModel {
 
   // custom
   final ResponseBuilder? userMessageBuilder;
+
+  // custom
+  final ChatInputBuilder? chatInputBuilder;
 
   /// The message sender for the chat interface.
   ///

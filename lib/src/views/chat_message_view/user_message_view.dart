@@ -68,12 +68,15 @@ class UserMessageView extends StatelessWidget {
                 child: DecoratedBox(
                   decoration: userStyle.decoration!,
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 16,
-                      right: 16,
-                      top: 12,
-                      bottom: 12,
-                    ),
+                    padding:
+                    // const EdgeInsets.only(
+                    //   left: 16,
+                    //   right: 16,
+                    //   top: 12,
+                    //   bottom: 12,
+                    // ),
+                    // TUBAO CUSTOME，定制UI风格
+                    const EdgeInsets.only(),
                     child: AdaptiveCopyText(
                       chatStyle: chatStyle,
                       clipboardText: text,

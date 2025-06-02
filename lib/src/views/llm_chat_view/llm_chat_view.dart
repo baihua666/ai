@@ -81,6 +81,7 @@ class LlmChatView extends StatefulWidget {
     LlmChatViewStyle? style,
     ResponseBuilder? responseBuilder,
     ResponseBuilder? userMessageBuilder,
+    ChatInputBuilder? chatInputBuilder,
     LlmStreamGenerator? messageSender,
     List<String> suggestions = const [],
     String? welcomeMessage,
@@ -96,6 +97,7 @@ class LlmChatView extends StatefulWidget {
          provider: provider,
          responseBuilder: responseBuilder,
          userMessageBuilder: userMessageBuilder,
+         chatInputBuilder: chatInputBuilder,
          messageSender: messageSender,
          style: style,
          suggestions: suggestions,
@@ -208,6 +210,7 @@ class _LlmChatViewState extends State<LlmChatView>
                         ],
                       ),
                     ),
+                    widget.viewModel.chatInputBuilder == null ?
                     ChatInput(
                       initialMessage: _initialMessage,
                       autofocus: widget.viewModel.suggestions.isEmpty,
@@ -221,6 +224,19 @@ class _LlmChatViewState extends State<LlmChatView>
                       onTranslateStt: _onTranslateStt,
                       onCancelStt:
                           _pendingSttResponse == null ? null : _onCancelStt,
+                    ) : widget.viewModel.chatInputBuilder!(
+                      context,
+                        _onSendMessage,
+                        _onTranslateStt,
+                        _initialMessage,
+                        _associatedResponse != null ? _onCancelEdit : null,
+                        _pendingPromptResponse == null
+                            ? null
+                            : _onCancelMessage,
+                        _pendingSttResponse == null ? null : _onCancelStt,
+                        widget.viewModel.suggestions.isEmpty
+
+
                     ),
                   ],
                 ),
@@ -283,7 +299,7 @@ class _LlmChatViewState extends State<LlmChatView>
     });
   }
 
-  Future<void> _onTranslateStt(XFile file) async {
+  Future<String?> _onTranslateStt(XFile file) async {
     assert(widget.enableVoiceNotes);
     _initialMessage = null;
     _associatedResponse = null;
@@ -292,9 +308,11 @@ class _LlmChatViewState extends State<LlmChatView>
       _pendingSttResponse = LlmResponse(stream: Stream.fromFuture(Future.value('')), onUpdate: (String text) {  }, onDone: (LlmException? error) {  });
       
       var response = await widget.onTranslateStt!.call(file);
-      _onSttDone(null, response ?? '', file);
-      setState(() {});
-      return;
+      if (response != null && response.isNotEmpty) {
+        _onSttDone(null, response ?? '', file);
+        setState(() {});
+      }
+      return response;
     }
 
     // use the LLM to translate the attached audio to text
