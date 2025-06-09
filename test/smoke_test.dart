@@ -40,8 +40,8 @@ void main() {
 }
 
 class SimpleEchoProvider extends LlmProvider with ChangeNotifier {
-  SimpleEchoProvider({Iterable<ChatMessage>? history})
-    : _history = List<ChatMessage>.from(history ?? []);
+  SimpleEchoProvider({Iterable<ChatMessage> history = const []})
+      : _history = List<ChatMessage>.from(history);
 
   final List<ChatMessage> _history;
 

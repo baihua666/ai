@@ -48,63 +48,62 @@ class ChatHistoryView extends StatefulWidget {
 class _ChatHistoryViewState extends State<ChatHistoryView> {
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-    child: ChatViewModelClient(
-      builder: (context, viewModel, child) {
-        final showWelcomeMessage = viewModel.welcomeMessage != null;
-        final showSuggestions =
-            viewModel.suggestions.isNotEmpty &&
-            viewModel.provider.history.isEmpty;
-        final history = [
-          if (showWelcomeMessage)
-            ChatMessage(
-              origin: MessageOrigin.llm,
-              text: viewModel.welcomeMessage,
-              attachments: [],
-            ),
-          // ...viewModel.provider.history,
-          ...viewModel.provider.history.where((message) => message.origin.isSystem == false),
-        ];
+        padding: const EdgeInsets.only(top: 16),
+        child: ChatViewModelClient(
+          builder: (context, viewModel, child) {
+            final showWelcomeMessage = viewModel.welcomeMessage != null;
+            final showSuggestions = viewModel.suggestions.isNotEmpty &&
+                viewModel.provider.history.isEmpty;
+            final history = [
+              if (showWelcomeMessage)
+                ChatMessage(
+                  origin: MessageOrigin.llm,
+                  text: viewModel.welcomeMessage,
+                  attachments: [],
+                ),
+              // ...viewModel.provider.history,
+              ...viewModel.provider.history
+                  .where((message) => message.origin.isSystem == false),
+            ];
 
-        return ListView.builder(
-          reverse: true,
-          itemCount: history.length + (showSuggestions ? 1 : 0),
-          itemBuilder: (context, index) {
-            if (showSuggestions) {
-              index -= showWelcomeMessage ? 1 : 0;
-              if (index == history.length - (showWelcomeMessage ? 2 : 0)) {
-                return ChatSuggestionsView(
-                  suggestions: viewModel.suggestions,
-                  onSelectSuggestion: widget.onSelectSuggestion,
-                );
-              }
-            }
-            final messageIndex = history.length - index - 1;
-            final message = history[messageIndex];
-            final isLastUserMessage =
-                message.origin.isUser && messageIndex >= history.length - 2;
-            final canEdit = isLastUserMessage && widget.onEditMessage != null;
-            final isUser = message.origin.isUser;
+            return ListView.builder(
+              reverse: true,
+              itemCount: history.length + (showSuggestions ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (showSuggestions) {
+                  index -= showWelcomeMessage ? 1 : 0;
+                  if (index == history.length - (showWelcomeMessage ? 2 : 0)) {
+                    return ChatSuggestionsView(
+                      suggestions: viewModel.suggestions,
+                      onSelectSuggestion: widget.onSelectSuggestion,
+                    );
+                  }
+                }
+                final messageIndex = history.length - index - 1;
+                final message = history[messageIndex];
+                final isLastUserMessage =
+                    message.origin.isUser && messageIndex >= history.length - 2;
+                final canEdit =
+                    isLastUserMessage && widget.onEditMessage != null;
+                final isUser = message.origin.isUser;
 
-            return Padding(
-              padding: const EdgeInsets.only(top: 6),
-              child:
-                  isUser
+                return Padding(
+                  padding: const EdgeInsets.only(top: 6),
+                  child: isUser
                       ? UserMessageView(
-                        message,
-                        onEdit:
-                            canEdit
-                                ? () => widget.onEditMessage?.call(message)
-                                : null,
-                      )
+                          message,
+                          onEdit: canEdit
+                              ? () => widget.onEditMessage?.call(message)
+                              : null,
+                        )
                       : LlmMessageView(
-                        message,
-                        isWelcomeMessage: messageIndex == 0,
-                      ),
+                          message,
+                          isWelcomeMessage: messageIndex == 0,
+                        ),
+                );
+              },
             );
           },
-        );
-      },
-    ),
-  );
+        ),
+      );
 }

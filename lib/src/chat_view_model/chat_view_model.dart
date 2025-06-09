@@ -3,6 +3,8 @@
 // found in the LICENSE file.
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_ai_toolkit/src/views/chat_message_view/ai_avatar.dart';
 
 import '../providers/interface/llm_provider.dart';
 import '../styles/llm_chat_view_style.dart';
@@ -10,6 +12,7 @@ import '../views/chat_input/chat_input.dart';
 import '../views/response_builder.dart';
 
 @immutable
+
 /// A view model class for managing chat interactions and configurations.
 ///
 /// This class encapsulates the core data and functionality needed for the chat
@@ -33,6 +36,7 @@ class ChatViewModel {
     required this.welcomeMessage,
     required this.responseBuilder,
     required this.userMessageBuilder,
+    this.aiAvatar,
     this.chatInputBuilder,
     required this.messageSender,
     required this.enableAttachments,
@@ -94,6 +98,9 @@ class ChatViewModel {
   /// will be disabled.
   final bool enableVoiceNotes;
 
+  ///Custom AI profile image
+  final Widget? aiAvatar;
+
   // The following is needed to support the
   // ChatViewModelProvider.updateShouldNotify implementation
   @override
@@ -106,6 +113,7 @@ class ChatViewModel {
           other.welcomeMessage == welcomeMessage &&
           other.responseBuilder == responseBuilder &&
           other.userMessageBuilder == userMessageBuilder &&
+          other.aiAvatar == aiAvatar &&
           other.messageSender == messageSender &&
           other.enableAttachments == enableAttachments &&
           other.enableVoiceNotes == enableVoiceNotes);
@@ -113,14 +121,15 @@ class ChatViewModel {
   // the following is best practices when overriding operator ==
   @override
   int get hashCode => Object.hash(
-    provider,
-    style,
-    suggestions,
-    welcomeMessage,
-    responseBuilder,
-    userMessageBuilder,
-    messageSender,
-    enableAttachments,
-    enableVoiceNotes,
-  );
+        provider,
+        style,
+        suggestions,
+        welcomeMessage,
+        responseBuilder,
+        userMessageBuilder,
+        aiAvatar,
+        messageSender,
+        enableAttachments,
+        enableVoiceNotes,
+      );
 }

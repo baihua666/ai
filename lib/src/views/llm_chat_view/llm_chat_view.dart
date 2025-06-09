@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:cross_file/cross_file.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ai_toolkit/src/views/chat_message_view/ai_avatar.dart';
 
 import '../../chat_view_model/chat_view_model.dart';
 import '../../chat_view_model/chat_view_model_provider.dart';
@@ -92,6 +93,7 @@ class LlmChatView extends StatefulWidget {
     this.enableAttachments = true,
     this.enableVoiceNotes = true,
     this.onTranslateStt,
+    this.aiAvatar = const AIAvatar(),
     super.key,
   }) : viewModel = ChatViewModel(
          provider: provider,
@@ -100,6 +102,7 @@ class LlmChatView extends StatefulWidget {
          chatInputBuilder: chatInputBuilder,
          messageSender: messageSender,
          style: style,
+         aiAvatar: aiAvatar,
          suggestions: suggestions,
          welcomeMessage: welcomeMessage,
          enableAttachments: enableAttachments,
@@ -148,6 +151,9 @@ class LlmChatView extends StatefulWidget {
   ///
   /// Defaults to 'ERROR'.
   final String errorMessage;
+
+   ///Custom ai avatar image
+  final Widget? aiAvatar;
 
   @override
   State<LlmChatView> createState() => _LlmChatViewState();
