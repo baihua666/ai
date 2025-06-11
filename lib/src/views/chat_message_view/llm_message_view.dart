@@ -20,7 +20,7 @@ class LlmMessageView extends StatelessWidget {
   ///
   /// The [message] parameter is required and represents the LLM chat message to
   /// be displayed.
-  const LlmMessageView(this.message,
+  const LlmMessageView(this.message, this.index,
       {this.isWelcomeMessage = false, super.key});
 
   /// The LLM chat message to be displayed.
@@ -28,6 +28,9 @@ class LlmMessageView extends StatelessWidget {
 
   ///Whether the message is the welcome message
   final bool isWelcomeMessage;
+
+  ///Message index
+  final int index;
 
   @override
   Widget build(BuildContext context) => ChatViewModelClient(
@@ -37,7 +40,8 @@ class LlmMessageView extends StatelessWidget {
           final llmStyle = LlmMessageStyle.resolve(chatStyle.llmMessageStyle);
 
           if (viewModel.responseBuilder != null) {
-            return viewModel.responseBuilder!(context, chatStyle, message);
+            return viewModel.responseBuilder!(
+                context, chatStyle, message, index);
           }
 
           return Row(

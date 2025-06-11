@@ -23,7 +23,10 @@ class UserMessageView extends StatelessWidget {
   ///
   /// The [message] parameter is required and contains the [ChatMessage] to be
   /// displayed.
-  const UserMessageView(this.message, {super.key, this.onEdit});
+  const UserMessageView(this.message, this.index, {super.key, this.onEdit});
+
+  ///Message index
+  final int index;
 
   /// The chat message to be displayed.
   final ChatMessage message;
@@ -57,7 +60,7 @@ class UserMessageView extends StatelessWidget {
 
               if (viewModel.userMessageBuilder != null) {
                 return viewModel.userMessageBuilder!(
-                    context, chatStyle, message);
+                    context, chatStyle, message, index);
               }
 
               return Align(

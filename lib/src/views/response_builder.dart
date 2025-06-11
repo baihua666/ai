@@ -21,4 +21,5 @@ typedef ResponseBuilder = Widget Function(
   BuildContext context,
   LlmChatViewStyle chatStyle,
   ChatMessage message,
+  int index
 );

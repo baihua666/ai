@@ -93,11 +93,13 @@ class _ChatHistoryViewState extends State<ChatHistoryView> {
                   child: isUser
                       ? UserMessageView(
                           message,
+                          index,
                           onEdit: canEdit
                               ? () => widget.onEditMessage?.call(message)
                               : null,
                         )
-                      : LlmMessageView(message, isWelcomeMessage: index == 0),
+                      : LlmMessageView(message, index,
+                          isWelcomeMessage: index == 0),
                 );
               },
             );
