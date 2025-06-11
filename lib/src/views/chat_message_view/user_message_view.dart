@@ -52,12 +52,12 @@ class UserMessageView extends StatelessWidget {
             builder: (context, viewModel, child) {
               final text = message.text!;
               final chatStyle = LlmChatViewStyle.resolve(viewModel.style);
-              final userStyle = UserMessageStyle.resolve(
-                chatStyle.userMessageStyle,
-              );
+              final userStyle =
+                  UserMessageStyle.resolve(chatStyle.userMessageStyle);
 
               if (viewModel.userMessageBuilder != null) {
-                return viewModel.userMessageBuilder!(context, chatStyle,message);
+                return viewModel.userMessageBuilder!(
+                    context, chatStyle, message);
               }
 
               return Align(

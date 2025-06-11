@@ -96,17 +96,18 @@ class LlmChatView extends StatefulWidget {
     this.aiAvatar = const AIAvatar(),
     super.key,
   }) : viewModel = ChatViewModel(
-         provider: provider,
-         responseBuilder: responseBuilder,
-         userMessageBuilder: userMessageBuilder,
-         chatInputBuilder: chatInputBuilder,
-         messageSender: messageSender,
-         style: style,
-         aiAvatar: aiAvatar,
-         suggestions: suggestions,
-         enableAttachments: enableAttachments,
-         enableVoiceNotes: enableVoiceNotes,
-       );
+          welcomeMessage: welcomeMessage,
+          provider: provider,
+          responseBuilder: responseBuilder,
+          userMessageBuilder: userMessageBuilder,
+          chatInputBuilder: chatInputBuilder,
+          messageSender: messageSender,
+          style: style,
+          aiAvatar: aiAvatar,
+          suggestions: suggestions,
+          enableAttachments: enableAttachments,
+          enableVoiceNotes: enableVoiceNotes,
+        );
 
   /// Whether to enable file and image attachments in the chat input.
   ///
@@ -121,7 +122,6 @@ class LlmChatView extends StatefulWidget {
   final bool enableVoiceNotes;
 
   final Future<String?> Function(XFile file)? onTranslateStt;
-
 
   /// The view model containing the chat state and configuration.
   ///
@@ -139,7 +139,7 @@ class LlmChatView extends StatefulWidget {
   ///
   /// By default, an alert dialog is displayed with the error message.
   final void Function(BuildContext context, LlmException error)?
-  onErrorCallback;
+      onErrorCallback;
 
   /// The text message to display when the user cancels a chat operation.
   ///
@@ -151,7 +151,7 @@ class LlmChatView extends StatefulWidget {
   /// Defaults to 'ERROR'.
   final String errorMessage;
 
-   ///Custom ai avatar image
+  ///Custom ai avatar image
   final Widget? aiAvatar;
 
   @override
@@ -187,50 +187,48 @@ class _LlmChatViewState extends State<LlmChatView>
     final chatStyle = LlmChatViewStyle.resolve(widget.viewModel.style);
     return ListenableBuilder(
       listenable: widget.viewModel.provider,
-      builder:
-          (context, child) => ChatViewModelProvider(
-            viewModel: widget.viewModel,
-            child: GestureDetector(
-              onTap: () {
-                // Dismiss keyboard when tapping anywhere in the view
-                FocusScope.of(context).unfocus();
-              },
-              child: Container(
-                color: chatStyle.backgroundColor,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Stack(
-                        children: [
-                          ChatHistoryView(
-                            // can only edit if we're not waiting on the LLM or if
-                            // we're not already editing an LLM response
-                            onEditMessage:
-                                _pendingPromptResponse == null &&
-                                        _associatedResponse == null
-                                    ? _onEditMessage
-                                    : null,
-                            onSelectSuggestion: _onSelectSuggestion,
-                          ),
-                        ],
+      builder: (context, child) => ChatViewModelProvider(
+        viewModel: widget.viewModel,
+        child: GestureDetector(
+          onTap: () {
+            // Dismiss keyboard when tapping anywhere in the view
+            FocusScope.of(context).unfocus();
+          },
+          child: Container(
+            color: chatStyle.backgroundColor,
+            child: Column(
+              children: [
+                Expanded(
+                  child: Stack(
+                    children: [
+                      ChatHistoryView(
+                        // can only edit if we're not waiting on the LLM or if
+                        // we're not already editing an LLM response
+                        onEditMessage: _pendingPromptResponse == null &&
+                                _associatedResponse == null
+                            ? _onEditMessage
+                            : null,
+                        onSelectSuggestion: _onSelectSuggestion,
                       ),
-                    ),
-                    widget.viewModel.chatInputBuilder == null ?
-                    ChatInput(
-                      initialMessage: _initialMessage,
-                      autofocus: widget.viewModel.suggestions.isEmpty,
-                      onCancelEdit:
-                          _associatedResponse != null ? _onCancelEdit : null,
-                      onSendMessage: _onSendMessage,
-                      onCancelMessage:
-                          _pendingPromptResponse == null
-                              ? null
-                              : _onCancelMessage,
-                      onTranslateStt: _onTranslateStt,
-                      onCancelStt:
-                          _pendingSttResponse == null ? null : _onCancelStt,
-                    ) : widget.viewModel.chatInputBuilder!(
-                      context,
+                    ],
+                  ),
+                ),
+                widget.viewModel.chatInputBuilder == null
+                    ? ChatInput(
+                        initialMessage: _initialMessage,
+                        autofocus: widget.viewModel.suggestions.isEmpty,
+                        onCancelEdit:
+                            _associatedResponse != null ? _onCancelEdit : null,
+                        onSendMessage: _onSendMessage,
+                        onCancelMessage: _pendingPromptResponse == null
+                            ? null
+                            : _onCancelMessage,
+                        onTranslateStt: _onTranslateStt,
+                        onCancelStt:
+                            _pendingSttResponse == null ? null : _onCancelStt,
+                      )
+                    : widget.viewModel.chatInputBuilder!(
+                        context,
                         _onSendMessage,
                         _onTranslateStt,
                         _initialMessage,
@@ -239,15 +237,12 @@ class _LlmChatViewState extends State<LlmChatView>
                             ? null
                             : _onCancelMessage,
                         _pendingSttResponse == null ? null : _onCancelStt,
-                        widget.viewModel.suggestions.isEmpty
-
-
-                    ),
-                  ],
-                ),
-              ),
+                        widget.viewModel.suggestions.isEmpty),
+              ],
             ),
           ),
+        ),
+      ),
     );
   }
 
@@ -259,8 +254,7 @@ class _LlmChatViewState extends State<LlmChatView>
     _associatedResponse = null;
 
     // check the viewmodel for a user-provided message sender to use instead
-    final sendMessageStream =
-        widget.viewModel.messageSender ??
+    final sendMessageStream = widget.viewModel.messageSender ??
         widget.viewModel.provider.sendMessageStream;
 
     _pendingPromptResponse = LlmResponse(
@@ -310,8 +304,11 @@ class _LlmChatViewState extends State<LlmChatView>
     _associatedResponse = null;
 
     if (widget.onTranslateStt != null) {
-      _pendingSttResponse = LlmResponse(stream: Stream.fromFuture(Future.value('')), onUpdate: (String text) {  }, onDone: (LlmException? error) {  });
-      
+      _pendingSttResponse = LlmResponse(
+          stream: Stream.fromFuture(Future.value('')),
+          onUpdate: (String text) {},
+          onDone: (LlmException? error) {});
+
       var response = await widget.onTranslateStt!.call(file);
       if (response != null && response.isNotEmpty) {
         _onSttDone(null, response ?? '', file);

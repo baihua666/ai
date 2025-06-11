@@ -20,10 +20,14 @@ class LlmMessageView extends StatelessWidget {
   ///
   /// The [message] parameter is required and represents the LLM chat message to
   /// be displayed.
-  const LlmMessageView(this.message, {super.key});
+  const LlmMessageView(this.message,
+      {this.isWelcomeMessage = false, super.key});
 
   /// The LLM chat message to be displayed.
   final ChatMessage message;
+
+  ///Whether the message is the welcome message
+  final bool isWelcomeMessage;
 
   @override
   Widget build(BuildContext context) => ChatViewModelClient(

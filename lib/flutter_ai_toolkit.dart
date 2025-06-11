@@ -34,5 +34,6 @@ export 'src/dialogs/adaptive_snack_bar/adaptive_snack_bar.dart';
 export 'src/views/chat_message_view/hovering_buttons.dart';
 export 'src/views/chat_message_view/adaptive_copy_text.dart';
 export 'src/views/jumping_dots_progress_indicator/jumping_dot.dart';
+export 'src/views/jumping_dots_progress_indicator/jumping_dots_progress_indicator.dart';
 
 
