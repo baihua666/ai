@@ -3,16 +3,22 @@
 // found in the LICENSE file.
 
 import 'package:flutter/widgets.dart';
+import 'package:flutter_ai_toolkit/flutter_ai_toolkit.dart';
 
-/// A function type that defines how to build a widget for displaying a response
-/// in the chat interface.
+/// Signature for a function that builds a widget to display an LLM chat response.
 ///
-/// [context] is the build context, which can be used to access theme data and
-/// other contextual information.
+/// This builder is used to render a single [ChatMessage] in the chat interface,
+/// typically representing a message from a language model (LLM).
 ///
-/// [response] is the text of the response from the LLM.
+/// Parameters:
+/// - [context]: The build context, used to access theme and other inherited widgets.
+/// - [chatStyle]: Defines the overall visual style of the chat view.
+/// - [message]: The [ChatMessage] object containing the content and metadata of the response.
 ///
-/// The function should return a [Widget] that represents the formatted response
-/// in the chat interface.
-typedef ResponseBuilder =
-    Widget Function(BuildContext context, String response);
+/// Returns:
+/// A [Widget] that visually represents the given LLM chat message in the UI.
+typedef ResponseBuilder = Widget Function(
+  BuildContext context,
+  LlmChatViewStyle chatStyle,
+  ChatMessage message,
+);

@@ -48,20 +48,12 @@ class ChatHistoryView extends StatefulWidget {
 class _ChatHistoryViewState extends State<ChatHistoryView> {
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(top: 16,left: 16),
+        padding: const EdgeInsets.only(top: 16, left: 16),
         child: ChatViewModelClient(
           builder: (context, viewModel, child) {
-            final showWelcomeMessage = viewModel.welcomeMessage != null;
             final showSuggestions = viewModel.suggestions.isNotEmpty &&
                 viewModel.provider.history.isEmpty;
             final history = [
-              if (showWelcomeMessage)
-                ChatMessage(
-                  origin: MessageOrigin.llm,
-                  text: viewModel.welcomeMessage,
-                  attachments: [],
-                ),
-              // ...viewModel.provider.history,
               ...viewModel.provider.history
                   .where((message) => message.origin.isSystem == false),
             ];
@@ -71,8 +63,7 @@ class _ChatHistoryViewState extends State<ChatHistoryView> {
               itemCount: history.length + (showSuggestions ? 1 : 0),
               itemBuilder: (context, index) {
                 if (showSuggestions) {
-                  index -= showWelcomeMessage ? 1 : 0;
-                  if (index == history.length - (showWelcomeMessage ? 2 : 0)) {
+                  if (index == history.length - 1) {
                     return ChatSuggestionsView(
                       suggestions: viewModel.suggestions,
                       onSelectSuggestion: widget.onSelectSuggestion,
@@ -96,10 +87,7 @@ class _ChatHistoryViewState extends State<ChatHistoryView> {
                               ? () => widget.onEditMessage?.call(message)
                               : null,
                         )
-                      : LlmMessageView(
-                          message,
-                          isWelcomeMessage: messageIndex == 0,
-                        ),
+                      : LlmMessageView(message),
                 );
               },
             );

@@ -104,7 +104,6 @@ class LlmChatView extends StatefulWidget {
          style: style,
          aiAvatar: aiAvatar,
          suggestions: suggestions,
-         welcomeMessage: welcomeMessage,
          enableAttachments: enableAttachments,
          enableVoiceNotes: enableVoiceNotes,
        );

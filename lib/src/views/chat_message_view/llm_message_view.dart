@@ -20,34 +20,29 @@ class LlmMessageView extends StatelessWidget {
   ///
   /// The [message] parameter is required and represents the LLM chat message to
   /// be displayed.
-  const LlmMessageView(
-    this.message, {
-    this.isWelcomeMessage = false,
-    super.key,
-  });
+  const LlmMessageView(this.message, {super.key});
 
   /// The LLM chat message to be displayed.
   final ChatMessage message;
 
-  /// Whether the message is the welcome message.
-  final bool isWelcomeMessage;
-
   @override
-  Widget build(BuildContext context) => Row(
-        children: [
-          Flexible(
-            flex: 6,
-            child: Column(
-              children: [
-                ChatViewModelClient(
-                  builder: (context, viewModel, child) {
-                    final text = message.text;
-                    final chatStyle = LlmChatViewStyle.resolve(viewModel.style);
-                    final llmStyle = LlmMessageStyle.resolve(
-                      chatStyle.llmMessageStyle,
-                    );
+  Widget build(BuildContext context) => ChatViewModelClient(
+        builder: (context, viewModel, child) {
+          final text = message.text;
+          final chatStyle = LlmChatViewStyle.resolve(viewModel.style);
+          final llmStyle = LlmMessageStyle.resolve(chatStyle.llmMessageStyle);
 
-                    return Stack(
+          if (viewModel.responseBuilder != null) {
+            return viewModel.responseBuilder!(context, chatStyle, message);
+          }
+
+          return Row(
+            children: [
+              Flexible(
+                flex: 6,
+                child: Column(
+                  children: [
+                    Stack(
                       children: [
                         if (viewModel.aiAvatar != null) viewModel.aiAvatar!,
                         HoveringButtons(
@@ -71,28 +66,21 @@ class LlmMessageView extends StatelessWidget {
                                 : AdaptiveCopyText(
                                     clipboardText: text,
                                     chatStyle: chatStyle,
-                                    child: isWelcomeMessage ||
-                                            viewModel.responseBuilder == null
-                                        ? MarkdownBody(
-                                            data: text,
-                                            selectable: false,
-                                            styleSheet: llmStyle.markdownStyle,
-                                          )
-                                        : viewModel.responseBuilder!(
-                                            context,
-                                            text,
-                                          ),
+                                    child: MarkdownBody(
+                                        data: text,
+                                        selectable: false,
+                                        styleSheet: llmStyle.markdownStyle),
                                   ),
                           ),
                         ),
                       ],
-                    );
-                  },
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          const Flexible(flex: 2, child: SizedBox()),
-        ],
+              ),
+              const Flexible(flex: 2, child: SizedBox()),
+            ],
+          );
+        },
       );
 }

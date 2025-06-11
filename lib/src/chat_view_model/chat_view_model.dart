@@ -2,10 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ai_toolkit/src/views/chat_message_view/ai_avatar.dart';
-
 import '../providers/interface/llm_provider.dart';
 import '../styles/llm_chat_view_style.dart';
 import '../views/chat_input/chat_input.dart';
@@ -33,7 +30,6 @@ class ChatViewModel {
     required this.provider,
     required this.style,
     required this.suggestions,
-    required this.welcomeMessage,
     required this.responseBuilder,
     required this.userMessageBuilder,
     this.aiAvatar,
@@ -61,12 +57,6 @@ class ChatViewModel {
   /// when the chat history is empty. The user can select any of these
   /// suggestions to quickly start a conversation with the LLM.
   final List<String> suggestions;
-
-  /// The welcome message to display in the chat interface.
-  ///
-  /// This message is shown to users when they first open the chat interface,
-  /// providing a friendly introduction or prompt.
-  final String? welcomeMessage;
 
   /// The builder for the chat response.
   ///
@@ -110,7 +100,6 @@ class ChatViewModel {
           other.provider == provider &&
           other.style == style &&
           other.suggestions == suggestions &&
-          other.welcomeMessage == welcomeMessage &&
           other.responseBuilder == responseBuilder &&
           other.userMessageBuilder == userMessageBuilder &&
           other.aiAvatar == aiAvatar &&
@@ -124,7 +113,6 @@ class ChatViewModel {
         provider,
         style,
         suggestions,
-        welcomeMessage,
         responseBuilder,
         userMessageBuilder,
         aiAvatar,

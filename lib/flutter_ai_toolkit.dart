@@ -31,5 +31,8 @@ export 'src/views/chat_input/attachments_action_bar.dart';
 export 'src/views/chat_input/input_button.dart';
 export 'src/views/chat_input/input_state.dart';
 export 'src/dialogs/adaptive_snack_bar/adaptive_snack_bar.dart';
+export 'src/views/chat_message_view/hovering_buttons.dart';
+export 'src/views/chat_message_view/adaptive_copy_text.dart';
+export 'src/views/jumping_dots_progress_indicator/jumping_dot.dart';
 
 
