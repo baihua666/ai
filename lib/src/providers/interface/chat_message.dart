@@ -27,7 +27,10 @@ class ChatMessage {
     required this.origin,
     required this.text,
     required this.attachments,
-  }) : assert(origin.isUser && text != null && text.isNotEmpty || origin.isLlm || origin.isSystem);
+    int? timestamp,
+  }) : assert(origin.isUser && text != null && text.isNotEmpty || origin.isLlm || origin.isSystem) {
+    this.timestamp = timestamp?? DateTime.now().millisecondsSinceEpoch;
+  }
 
   /// Converts a JSON map representation to a [ChatMessage].
   ///
@@ -58,6 +61,7 @@ class ChatMessage {
           _ => throw UnimplementedError(),
         },
     ],
+    timestamp: map['timestamp'],
   );
 
   /// Factory constructor for creating an LLM-originated message.
@@ -91,12 +95,17 @@ class ChatMessage {
   /// This is typically used for LLM messages that are streamed in parts.
   void append(String text) => this.text = (this.text ?? '') + text;
 
+  // carl定制
+  // 增加时间戳
+  late int timestamp;
+
   @override
   String toString() =>
       'ChatMessage('
       'origin: $origin, '
       'text: $text, '
       'attachments: $attachments'
+      'timestamp: $timestamp'
       ')';
 
   /// Converts a [ChatMessage] to a JSON map representation.
@@ -131,5 +140,6 @@ class ChatMessage {
           },
         },
     ],
+    'timestamp': timestamp,
   };
 }

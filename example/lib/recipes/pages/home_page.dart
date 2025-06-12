@@ -130,11 +130,11 @@ well as any trailing text commentary you care to provide:
             Expanded(child: RecipeListView(searchText: _searchText)),
           ],
         ),
-        LlmChatView(
-          provider: _provider,
-          welcomeMessage: _welcomeMessage,
-          responseBuilder: (context, response) => RecipeResponseView(response),
-        ),
+        // LlmChatView(
+        //   provider: _provider,
+        //   welcomeMessage: _welcomeMessage,
+        //   responseBuilder: (context, response) => RecipeResponseView(response),
+        // ),
       ],
     ),
   );

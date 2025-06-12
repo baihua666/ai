@@ -36,6 +36,7 @@ class UserMessageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           ...[
             for (final attachment in message.attachments)
