@@ -29,7 +29,7 @@ class ChatMessage {
     required this.attachments,
     int? timestamp,
   }) : assert(origin.isUser && text != null && text.isNotEmpty || origin.isLlm || origin.isSystem) {
-    this.timestamp = timestamp?? DateTime.now().millisecondsSinceEpoch;
+    this.timestamp = timestamp?? DateTime.now().microsecondsSinceEpoch;
   }
 
   /// Converts a JSON map representation to a [ChatMessage].
