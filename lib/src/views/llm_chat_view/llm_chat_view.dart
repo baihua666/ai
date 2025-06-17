@@ -5,6 +5,8 @@
 import 'dart:async';
 
 import 'package:cross_file/cross_file.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ai_toolkit/src/views/chat_message_view/ai_avatar.dart';
 
@@ -194,26 +196,22 @@ class _LlmChatViewState extends State<LlmChatView>
             // Dismiss keyboard when tapping anywhere in the view
             FocusScope.of(context).unfocus();
           },
-          child: Container(
-            color: chatStyle.backgroundColor,
-            child: Column(
-              children: [
-                Expanded(
-                  child: Stack(
-                    children: [
-                      ChatHistoryView(
-                        // can only edit if we're not waiting on the LLM or if
-                        // we're not already editing an LLM response
-                        onEditMessage: _pendingPromptResponse == null &&
-                                _associatedResponse == null
-                            ? _onEditMessage
-                            : null,
-                        onSelectSuggestion: _onSelectSuggestion,
-                      ),
-                    ],
-                  ),
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Scaffold(
+                extendBody: true,
+                backgroundColor: chatStyle.backgroundColor,
+                body: ChatHistoryView(
+                  // can only edit if we're not waiting on the LLM or if
+                  // we're not already editing an LLM response
+                  onEditMessage: _pendingPromptResponse == null &&
+                          _associatedResponse == null
+                      ? _onEditMessage
+                      : null,
+                  onSelectSuggestion: _onSelectSuggestion,
                 ),
-                widget.viewModel.chatInputBuilder == null
+                bottomNavigationBar: widget.viewModel.chatInputBuilder == null
                     ? ChatInput(
                         initialMessage: _initialMessage,
                         autofocus: widget.viewModel.suggestions.isEmpty,
@@ -238,8 +236,8 @@ class _LlmChatViewState extends State<LlmChatView>
                             : _onCancelMessage,
                         _pendingSttResponse == null ? null : _onCancelStt,
                         widget.viewModel.suggestions.isEmpty),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

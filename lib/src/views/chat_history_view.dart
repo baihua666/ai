@@ -61,7 +61,6 @@ class _ChatHistoryViewState extends State<ChatHistoryView> {
                   text: viewModel.welcomeMessage,
                   attachments: [],
                 ),
-              // ...viewModel.provider.history,
               ...viewModel.provider.history
                   .where((message) => message.origin.isSystem == false),
             ];
@@ -87,7 +86,7 @@ class _ChatHistoryViewState extends State<ChatHistoryView> {
                 final canEdit =
                     isLastUserMessage && widget.onEditMessage != null;
                 final isUser = message.origin.isUser;
-
+            
                 return Padding(
                   padding: const EdgeInsets.only(top: 6),
                   child: isUser
