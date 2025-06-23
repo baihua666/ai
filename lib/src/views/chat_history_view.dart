@@ -24,11 +24,11 @@ class ChatHistoryView extends StatefulWidget {
   /// If [onEditMessage] is provided, it will be called when a user initiates an
   /// edit action on an editable message (typically the last user message in the
   /// history).
-  const ChatHistoryView({
-    this.onEditMessage,
-    required this.onSelectSuggestion,
-    super.key,
-  });
+  const ChatHistoryView(
+      {this.onEditMessage,
+      required this.onSelectSuggestion,
+      super.key,
+      this.physics, this.padding});
 
   /// Optional callback function for editing a message.
   ///
@@ -40,6 +40,12 @@ class ChatHistoryView extends StatefulWidget {
 
   /// The callback function to call when a suggestion is selected.
   final void Function(String suggestion) onSelectSuggestion;
+
+  /// Scroll Physics
+  final ScrollPhysics? physics;
+
+  /// ListView padding
+  final EdgeInsets? padding;
 
   @override
   State<ChatHistoryView> createState() => _ChatHistoryViewState();
@@ -67,6 +73,8 @@ class _ChatHistoryViewState extends State<ChatHistoryView> {
 
             return ListView.builder(
               reverse: true,
+              physics: widget.physics,
+              padding: widget.padding,
               itemCount: history.length + (showSuggestions ? 1 : 0),
               itemBuilder: (context, index) {
                 if (showSuggestions) {
@@ -86,7 +94,7 @@ class _ChatHistoryViewState extends State<ChatHistoryView> {
                 final canEdit =
                     isLastUserMessage && widget.onEditMessage != null;
                 final isUser = message.origin.isUser;
-            
+
                 return Padding(
                   padding: const EdgeInsets.only(top: 6),
                   child: isUser

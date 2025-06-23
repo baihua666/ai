@@ -96,6 +96,8 @@ class LlmChatView extends StatefulWidget {
     this.enableVoiceNotes = true,
     this.onTranslateStt,
     this.aiAvatar = const AIAvatar(),
+    this.physics,
+    this.padding,
     super.key,
   }) : viewModel = ChatViewModel(
           welcomeMessage: welcomeMessage,
@@ -156,6 +158,12 @@ class LlmChatView extends StatefulWidget {
   ///Custom ai avatar image
   final Widget? aiAvatar;
 
+  /// Scroll Physics
+  final ScrollPhysics? physics;
+
+  /// ListView padding
+  final EdgeInsets? padding;
+
   @override
   State<LlmChatView> createState() => _LlmChatViewState();
 }
@@ -210,6 +218,8 @@ class _LlmChatViewState extends State<LlmChatView>
                       ? _onEditMessage
                       : null,
                   onSelectSuggestion: _onSelectSuggestion,
+                  padding: widget.padding,
+                  physics: widget.physics,
                 ),
                 bottomNavigationBar: widget.viewModel.chatInputBuilder == null
                     ? ChatInput(
