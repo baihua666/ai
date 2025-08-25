@@ -47,6 +47,13 @@ abstract class LlmProvider implements Listenable {
     Iterable<Attachment> attachments,
   });
 
+  Stream<String> sendSystemMessageStream(
+      String prompt, {
+        Iterable<Attachment> attachments = const [],
+      }) {
+    throw Exception();
+  }
+
   /// Returns an iterable of [ChatMessage] objects representing the chat
   /// history.
   ///

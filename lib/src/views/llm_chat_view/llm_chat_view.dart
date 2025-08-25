@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:cross_file/cross_file.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ai_toolkit/src/views/chat_message_view/ai_avatar.dart';
@@ -265,11 +266,20 @@ class _LlmChatViewState extends State<LlmChatView>
     final sendMessageStream = widget.viewModel.messageSender ??
         widget.viewModel.provider.sendMessageStream;
 
+    if (kDebugMode) {
+      print('LlmChatView,sendMessageStream:$prompt');
+    }
+    String content = '';
     _pendingPromptResponse = LlmResponse(
       stream: sendMessageStream(prompt, attachments: attachments),
       // update during the streaming response input so that the end-user can see
       // the response as it streams in
-      onUpdate: (_) => setState(() {}),
+      onUpdate: (value) => setState(() {
+        if (kDebugMode) {
+          content += value;
+          print('LlmChatView,onUpdate:$content');
+        }
+      }),
       onDone: _onPromptDone,
     );
 
