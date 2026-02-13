@@ -25,11 +25,16 @@ class ChatMessage {
   /// files or media attached to the message.
   ChatMessage({
     required this.origin,
-    required this.text,
+    required String? text,
     required this.attachments,
     int? timestamp,
-  }) : assert(origin.isUser && text != null && text.isNotEmpty || origin.isLlm || origin.isSystem) {
-    this.timestamp = timestamp?? DateTime.now().microsecondsSinceEpoch;
+  }) : _text = text,
+       assert(
+         origin.isUser && text != null && text.isNotEmpty ||
+             origin.isLlm ||
+             origin.isSystem,
+       ) {
+    this.timestamp = timestamp ?? DateTime.now().microsecondsSinceEpoch;
   }
 
   /// Converts a JSON map representation to a [ChatMessage].
@@ -81,8 +86,15 @@ class ChatMessage {
         attachments: attachments,
       );
 
+  String? _text;
+  StringBuffer? _textBuffer;
+
   /// Text content of the message.
-  String? text;
+  String? get text => _textBuffer == null ? _text : _textBuffer!.toString();
+  set text(String? value) {
+    _text = value;
+    _textBuffer = null;
+  }
 
   /// The origin of the message (user or LLM).
   final MessageOrigin origin;
@@ -93,7 +105,10 @@ class ChatMessage {
   /// Appends additional text to the existing message content.
   ///
   /// This is typically used for LLM messages that are streamed in parts.
-  void append(String text) => this.text = (this.text ?? '') + text;
+  void append(String text) {
+    final buffer = _textBuffer ??= StringBuffer(_text ?? '');
+    buffer.write(text);
+  }
 
   // carl定制
   // 增加时间戳
