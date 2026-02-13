@@ -99,6 +99,7 @@ class LlmChatView extends StatefulWidget {
     this.aiAvatar = const AIAvatar(),
     this.physics,
     this.padding,
+    this.streamUpdateThrottle,
     super.key,
   }) : viewModel = ChatViewModel(
           welcomeMessage: welcomeMessage,
@@ -165,6 +166,9 @@ class LlmChatView extends StatefulWidget {
   /// ListView padding
   final EdgeInsets? padding;
 
+  /// Throttle UI updates while streaming responses.
+  final Duration? streamUpdateThrottle;
+
   @override
   State<LlmChatView> createState() => _LlmChatViewState();
 }
@@ -178,6 +182,9 @@ class _LlmChatViewState extends State<LlmChatView>
   ChatMessage? _initialMessage;
   ChatMessage? _associatedResponse;
   LlmResponse? _pendingSttResponse;
+  DateTime? _lastStreamUpdate;
+  Timer? _streamUpdateTimer;
+  bool _streamUpdateQueued = false;
 
   @override
   void initState() {
@@ -187,6 +194,7 @@ class _LlmChatViewState extends State<LlmChatView>
 
   @override
   void dispose() {
+    _clearStreamUpdateTimer();
     super.dispose();
     widget.viewModel.provider.removeListener(_onHistoryChanged);
   }
@@ -261,6 +269,8 @@ class _LlmChatViewState extends State<LlmChatView>
   ) async {
     _initialMessage = null;
     _associatedResponse = null;
+    _clearStreamUpdateTimer();
+    _lastStreamUpdate = null;
 
     // check the viewmodel for a user-provided message sender to use instead
     final sendMessageStream = widget.viewModel.messageSender ??
@@ -274,12 +284,13 @@ class _LlmChatViewState extends State<LlmChatView>
       stream: sendMessageStream(prompt, attachments: attachments),
       // update during the streaming response input so that the end-user can see
       // the response as it streams in
-      onUpdate: (value) => setState(() {
+      onUpdate: (value) {
         if (kDebugMode) {
           content += value;
           print('LlmChatView,onUpdate:$content');
         }
-      }),
+        _scheduleStreamUpdate();
+      },
       onDone: _onPromptDone,
     );
 
@@ -287,8 +298,47 @@ class _LlmChatViewState extends State<LlmChatView>
   }
 
   void _onPromptDone(LlmException? error) {
+    _clearStreamUpdateTimer();
     setState(() => _pendingPromptResponse = null);
     unawaited(_showLlmException(error));
+  }
+
+  void _scheduleStreamUpdate() {
+    final throttle = widget.streamUpdateThrottle;
+    if (throttle == null || throttle == Duration.zero) {
+      if (mounted) {
+        setState(() {});
+      }
+      return;
+    }
+
+    final now = DateTime.now();
+    final last = _lastStreamUpdate;
+    if (last == null || now.difference(last) >= throttle) {
+      _lastStreamUpdate = now;
+      _clearStreamUpdateTimer();
+      if (mounted) {
+        setState(() {});
+      }
+      return;
+    }
+
+    _streamUpdateQueued = true;
+    if (_streamUpdateTimer?.isActive ?? false) return;
+    final remaining = throttle - now.difference(last);
+    _streamUpdateTimer = Timer(remaining, () {
+      _streamUpdateTimer = null;
+      if (!_streamUpdateQueued || !mounted) return;
+      _streamUpdateQueued = false;
+      _lastStreamUpdate = DateTime.now();
+      setState(() {});
+    });
+  }
+
+  void _clearStreamUpdateTimer() {
+    _streamUpdateTimer?.cancel();
+    _streamUpdateTimer = null;
+    _streamUpdateQueued = false;
   }
 
   void _onCancelMessage() => _pendingPromptResponse?.cancel();
